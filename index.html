@@ -318,10 +318,6 @@ section { padding:5rem 2rem; }
   font-size:0.62rem; font-weight:500; padding:0.2rem 0.6rem;
   border-radius:4px; background:var(--bg-3); color:var(--text-2);
 }
-.flight-reserva {
-  margin-top:0.85rem; padding-top:0.6rem; border-top:1px solid var(--border);
-  font-size:0.65rem; letter-spacing:0.1em; color:var(--text-3);
-}
 .flight-card--pending {
   opacity:0.45; border-style:dashed;
 }
@@ -544,6 +540,18 @@ section { padding:5rem 2rem; }
   .countdown-number { font-size:1.1rem; }
   .cal-day { min-height:46px; } .cal-day-num { font-size:0.58rem; }
 }
+
+/* ── AUTH GATE ── */
+#authGate { position:fixed; inset:0; z-index:9999; background:var(--bg-0); display:flex; align-items:center; justify-content:center; }
+.auth-box { text-align:center; padding:2rem; }
+.auth-emoji { font-size:3rem; margin-bottom:1rem; }
+.auth-title { font-size:1.2rem; font-weight:700; color:var(--text-1); margin-bottom:1.5rem; }
+.auth-input { width:220px; padding:10px 14px; border:1px solid var(--border); border-radius:8px; background:var(--bg-2); color:var(--text-1); font-size:0.9rem; text-align:center; outline:none; }
+.auth-input:focus { border-color:var(--accent); }
+.auth-input.shake { animation:shake .3s; border-color:var(--danger); }
+.auth-btn { display:block; width:220px; margin:12px auto 0; padding:10px; border:none; border-radius:8px; background:var(--accent); color:#fff; font-weight:600; font-size:0.85rem; cursor:pointer; }
+.auth-btn:hover { opacity:0.9; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
 </style>
 </head>
 <body>
@@ -606,6 +614,15 @@ section { padding:5rem 2rem; }
 </section>
 
 <div class="save-toast" id="saveToast">✓ Guardado</div>
+
+<div id="authGate" style="display:none">
+  <div class="auth-box">
+    <div class="auth-emoji">✈️</div>
+    <h2 class="auth-title">Eurotrip 2026</h2>
+    <input type="password" id="authInput" class="auth-input" placeholder="Contraseña" autocomplete="off">
+    <button id="authBtn" class="auth-btn">Entrar</button>
+  </div>
+</div>
 
 <script>
 // =============================================
@@ -1137,16 +1154,16 @@ function renderTimeline() {
 // FLIGHTS
 // =============================================
 const flights = [
-  {airline:'Iberia',code:'IB0118',reserva:'LWXG2',from:{iata:'SCL',city:'Santiago'},to:{iata:'MAD',city:'Madrid'},departure:'14 mayo · 10:40',arrival:'15 mayo · 05:20',passengers:['Max']},
-  {airline:'Iberia',code:'IB0114',reserva:'8YVTUR',from:{iata:'SCL',city:'Santiago'},to:{iata:'MAD',city:'Madrid'},departure:'15 mayo · 22:20',arrival:'16 mayo · 17:00',passengers:['Jacinta']},
-  {airline:'Ryanair',code:'FR 725',reserva:'JZMHHZ',from:{iata:'MAD',city:'Madrid'},to:{iata:'PMO',city:'Palermo'},departure:'18 mayo · 22:10',arrival:'19 mayo · 00:40',passengers:['Max','Jacinta']},
-  {airline:'Por confirmar',code:'TBD',reserva:'',from:{iata:'LHR',city:'Londres'},to:{iata:'SCL',city:'Santiago'},departure:'7 junio',arrival:'7 junio',passengers:['Jacinta'],note:'Jaci vuelve directo desde Londres'},
-  {airline:'Iberia',code:'IB0113',reserva:'LWXG2',from:{iata:'MAD',city:'Madrid'},to:{iata:'SCL',city:'Santiago'},departure:'21 junio · 13:00',arrival:'21 junio · 20:20',passengers:['Max']},
+  {airline:'Iberia',code:'IB0118',from:{iata:'SCL',city:'Santiago'},to:{iata:'MAD',city:'Madrid'},departure:'14 mayo · 10:40',arrival:'15 mayo · 05:20',passengers:['Max']},
+  {airline:'Iberia',code:'IB0114',from:{iata:'SCL',city:'Santiago'},to:{iata:'MAD',city:'Madrid'},departure:'15 mayo · 22:20',arrival:'16 mayo · 17:00',passengers:['Jacinta']},
+  {airline:'Ryanair',code:'FR 725',from:{iata:'MAD',city:'Madrid'},to:{iata:'PMO',city:'Palermo'},departure:'18 mayo · 22:10',arrival:'19 mayo · 00:40',passengers:['Max','Jacinta']},
+  {airline:'Por confirmar',code:'TBD',from:{iata:'LHR',city:'Londres'},to:{iata:'SCL',city:'Santiago'},departure:'7 junio',arrival:'7 junio',passengers:['Jacinta'],note:'Jaci vuelve directo desde Londres'},
+  {airline:'Iberia',code:'IB0113',from:{iata:'MAD',city:'Madrid'},to:{iata:'SCL',city:'Santiago'},departure:'21 junio · 13:00',arrival:'21 junio · 20:20',passengers:['Max']},
 ];
 
 function renderFlights() {
   document.getElementById('flightsGrid').innerHTML=flights.map(f=>`
-    <div class="flight-card${!f.reserva?' flight-card--pending':''}">
+    <div class="flight-card${f.code==='TBD'?' flight-card--pending':''}">
       <div class="flight-airline">${f.airline}</div>
       <div class="flight-route">
         <div class="flight-city"><div class="flight-iata">${f.from.iata}</div><div class="flight-city-name">${f.from.city}</div></div>
@@ -1159,7 +1176,6 @@ function renderFlights() {
       </div>
       <div class="flight-passengers">${f.passengers.map(p=>`<span class="flight-passenger-tag">${p}</span>`).join('')}</div>
       ${f.note?`<div class="flight-note" style="color:#D4705A;font-size:.85em;margin-top:4px;">${f.note}</div>`:''}
-      <div class="flight-reserva">${f.reserva?'Reserva: '+f.reserva:'Reserva: Por confirmar'}</div>
     </div>`).join('');
 }
 
@@ -1376,6 +1392,28 @@ document.addEventListener('mouseup', e => {
   dragStart = null; isDragging = false;
 });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+// =============================================
+// AUTH GATE
+// =============================================
+const AUTH_HASH = '62c518e3eb5350283f0fcd378c3f9756c6713d62d3004244bf26b2d12b903de2';
+async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+function checkAuth(){return sessionStorage.getItem('eurotrip_auth')==='1';}
+function showAuthGate(){
+  if(checkAuth()){document.getElementById('authGate').remove();return;}
+  document.getElementById('authGate').style.display='flex';
+  document.body.style.overflow='hidden';
+  const inp=document.getElementById('authInput');
+  inp.focus();
+  async function tryAuth(){
+    const hash=await sha256(inp.value);
+    if(hash===AUTH_HASH){sessionStorage.setItem('eurotrip_auth','1');document.getElementById('authGate').remove();document.body.style.overflow='';}
+    else{inp.value='';inp.placeholder='Contraseña incorrecta';inp.classList.add('shake');}
+  }
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')tryAuth();inp.classList.remove('shake');});
+  document.getElementById('authBtn').onclick=tryAuth;
+}
+showAuthGate();
 </script>
 </body>
 </html>

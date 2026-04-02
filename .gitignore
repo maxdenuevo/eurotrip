@@ -5,3 +5,4 @@ PDFs/
 *.json
 !manifest.json
 !package.json
+.claude
