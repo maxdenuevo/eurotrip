@@ -1,0 +1,15 @@
+{
+  "name": "Eurotrip 2026 — Max & Jacinta",
+  "short_name": "Eurotrip 2026",
+  "description": "Planificador de viaje Europa 2026",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#13151A",
+  "theme_color": "#13151A",
+  "orientation": "any",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

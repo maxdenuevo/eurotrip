@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Eurotrip 2026 — Max & Jacinta</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#13151A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Eurotrip 2026">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<style>
+/*
+  COLOR SYSTEM — every color means something:
+
+  People (consistent everywhere):
+    --c-max:       #5B7FA5   Max — steady blue
+    --c-jaci:      #D4705A   Jacinta — warm terracotta
+    --c-tomas-sofi:#5A9E7F   Tomás & Sofi — adventure green
+    --c-lucas-gi:  #C9A84C   Lucas & Gi — golden hosts
+    --c-gonz-niev: #8B7DB8   Gonzalo & Nieves — Berlin lavender
+    --c-santi-nach:#D08B5B   Santi & Nacha — Utrecht copper
+
+  Countries (calendar cells):
+    --cc-cl:  #3A3A42  Chile — neutral dark
+    --cc-es:  #8B6E2A  Spain — amber
+    --cc-it:  #2E7A5A  Italy — green
+    --cc-itr: #238060  Italy road — brighter green
+    --cc-uk:  #4A6E82  UK — steel
+    --cc-de:  #6B5F96  Germany — purple
+    --cc-nl:  #9B6B3A  Netherlands — orange-brown
+
+  UI:
+    --bg-0:   #0E1015  deepest background
+    --bg-1:   #161920  surface
+    --bg-2:   #1E2129  card / elevated
+    --bg-3:   #282C36  input / hover
+    --border: #2A2E38  subtle lines
+    --text-1: #E8E6E1  primary text
+    --text-2: #9A9BA3  secondary text
+    --text-3: #5C5E68  muted text
+    --accent:  #D4705A  primary action (jaci color)
+    --positive:#5A9E7F  success
+    --warning: #C9A84C  warning
+    --danger:  #C75050  error
+*/
+:root {
+  --c-max:#5B7FA5; --c-jaci:#D4705A;
+  --c-tomas-sofi:#5A9E7F; --c-lucas-gi:#C9A84C;
+  --c-gonz-niev:#8B7DB8; --c-santi-nach:#D08B5B;
+
+  --cc-cl:#3A3A42; --cc-es:#8B6E2A; --cc-it:#2E7A5A; --cc-itr:#238060;
+  --cc-uk:#4A6E82; --cc-de:#6B5F96; --cc-nl:#9B6B3A; --cc-none:#2A2D36;
+
+  --bg-0:#0E1015; --bg-1:#161920; --bg-2:#1E2129; --bg-3:#282C36;
+  --border:#2A2E38;
+  --text-1:#E8E6E1; --text-2:#9A9BA3; --text-3:#5C5E68;
+  --accent:#D4705A; --positive:#5A9E7F; --warning:#C9A84C; --danger:#C75050;
+
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg-0);
+  color: var(--text-1);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding:0.75rem 2rem;
+  display:flex; justify-content:space-between; align-items:center;
+  background:rgba(14,16,21,0.8);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo { font-weight:700; font-size:0.85rem; letter-spacing:0.04em; color:var(--text-1); }
+.nav-links { display:flex; gap:1.5rem; list-style:none; }
+.nav-links a {
+  color:var(--text-2); text-decoration:none; font-size:0.72rem;
+  font-weight:500; letter-spacing:0.04em; text-transform:uppercase;
+  transition:color 0.2s;
+}
+.nav-links a:hover { color:var(--text-1); }
+
+/* ── HERO (compact bar) ── */
+.hero {
+  display:flex; align-items:center; justify-content:center; gap:1.5rem;
+  padding:4.5rem 2rem 1rem; /* top accounts for fixed nav */
+  text-align:center; flex-wrap:wrap;
+}
+.hero h1 {
+  font-size:1.5rem; font-weight:800;
+  line-height:1; letter-spacing:-0.03em;
+}
+.hero h1 .accent { color:var(--accent); }
+.countdown { display:flex; gap:1rem; }
+.countdown-item { text-align:center; }
+.countdown-number { font-size:1.3rem; font-weight:800; color:var(--accent); line-height:1; font-variant-numeric:tabular-nums; }
+.countdown-label { font-size:0.5rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-3); margin-top:0.1rem; }
+
+/* ── SECTIONS ── */
+section { padding:5rem 2rem; }
+.section-header { text-align:center; margin-bottom:2.5rem; }
+.section-eyebrow {
+  font-size:0.65rem; font-weight:600; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:0.5rem;
+}
+.section-title { font-size:clamp(1.5rem, 3vw, 2rem); font-weight:700; letter-spacing:-0.02em; }
+
+.reveal {
+  opacity:0; transform:translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── COMPANION TIMELINE ── */
+#companions { background:var(--bg-1); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.companion-track { max-width:900px; margin:0 auto; }
+.companion-row { display:flex; align-items:center; margin-bottom:0.5rem; }
+.companion-label {
+  width:130px; flex-shrink:0; font-size:0.75rem; font-weight:500;
+  text-align:right; padding-right:1rem; color:var(--text-2);
+}
+.companion-bar-container { flex:1; height:28px; position:relative; border-radius:4px; overflow:hidden; background:var(--bg-2); }
+.companion-bar {
+  position:absolute; height:100%; border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:600; color:var(--bg-0);
+  overflow:hidden; white-space:nowrap; letter-spacing:0.02em;
+}
+.companion-dates-axis { display:flex; align-items:center; margin-top:0.75rem; }
+.companion-dates-axis .companion-label { opacity:0; }
+.companion-dates-axis .axis-container {
+  flex:1; display:flex; justify-content:space-between;
+  font-size:0.55rem; color:var(--text-3); font-weight:500;
+}
+
+/* ── CALENDAR ── */
+#calendar { background:var(--bg-0); }
+.cal-wrapper { max-width:860px; margin:0 auto; }
+
+.cal-toolbar {
+  display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;
+  margin-bottom:1rem;
+}
+.cal-btn {
+  font-family:var(--font); font-size:0.68rem; font-weight:500;
+  padding:0.35rem 0.75rem; border-radius:6px;
+  border:1px solid var(--border); background:var(--bg-2);
+  color:var(--text-2); cursor:pointer; transition:all 0.15s;
+}
+.cal-btn:hover { background:var(--bg-3); color:var(--text-1); }
+.cal-btn.danger { color:var(--danger); border-color:rgba(199,80,80,0.3); }
+.cal-btn.danger:hover { background:rgba(199,80,80,0.1); }
+.cal-save { margin-left:auto; font-size:0.65rem; font-weight:500; color:var(--positive); opacity:0; transition:opacity 0.3s; }
+.cal-save.show { opacity:1; }
+
+.cal-legend { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:1rem; }
+.cal-legend-item { font-size:0.6rem; font-weight:500; padding:2px 8px; border-radius:4px; }
+
+.cal-weekday-header { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:2px; }
+.cal-weekday-header div {
+  text-align:center; font-size:0.55rem; font-weight:600;
+  color:var(--text-3); padding:4px 0; text-transform:uppercase; letter-spacing:0.1em;
+}
+
+.cal-month-sep { display:flex; align-items:center; gap:10px; margin:12px 0 6px; }
+.cal-month-sep-label { font-size:0.65rem; font-weight:600; color:var(--text-3); letter-spacing:0.06em; text-transform:uppercase; }
+.cal-month-sep-line { flex:1; height:1px; background:var(--border); }
+
+.cal-week { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:2px; }
+.cal-day {
+  cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-start;
+  padding:4px 2px 5px; border-radius:6px; min-height:64px;
+  position:relative; transition:all 0.1s; user-select:none;
+}
+.cal-day:hover { filter:brightness(1.15); }
+.cal-day.selected { outline:2px solid var(--accent); outline-offset:-1px; z-index:1; }
+.cal-day.in-range { outline:1.5px dashed var(--text-3); outline-offset:-1px; }
+.cal-day.empty { background:transparent !important; cursor:default; }
+.cal-day.empty:hover { filter:none; }
+.cal-day-flag { position:absolute; top:2px; right:3px; font-size:9px; line-height:1; }
+.cal-day-num { font-size:0.65rem; font-weight:600; margin-top:13px; line-height:1; }
+.cal-day-loc { font-size:0.58rem; font-weight:500; margin-top:2px; line-height:1; }
+.cal-day-comp { font-size:0.5rem; opacity:0.7; margin-top:1px; line-height:1; }
+.cal-day-dot { width:3px; height:3px; border-radius:50%; margin-top:3px; }
+
+.cal-edit-panel {
+  position:fixed; z-index:200;
+  background:var(--bg-2); border:1px solid var(--border);
+  border-radius:10px; padding:1rem 1.25rem;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  width:340px; max-width:calc(100vw - 2rem);
+  opacity:0; transform:translateY(6px);
+  animation:panelIn 0.15s ease-out forwards;
+}
+@keyframes panelIn { to { opacity:1; transform:translateY(0); } }
+.cal-edit-overlay {
+  position:fixed; inset:0; z-index:199; background:transparent;
+}
+
+.cal-budget-strip {
+  display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:1rem;
+  padding:0.75rem 1rem; background:var(--bg-1); border:1px solid var(--border); border-radius:10px;
+}
+.cal-budget-strip-item { flex:1; min-width:100px; text-align:center; }
+.cal-budget-strip-val { font-size:1rem; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.2; }
+.cal-budget-strip-label { font-size:0.55rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-3); margin-top:0.15rem; }
+.cal-edit-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.cal-edit-title { font-size:0.85rem; font-weight:600; text-transform:capitalize; }
+.cal-edit-close { background:none; border:none; font-size:1.1rem; color:var(--text-3); cursor:pointer; padding:4px; }
+.cal-edit-close:hover { color:var(--text-1); }
+.cal-edit-fields { display:flex; gap:10px; flex-wrap:wrap; }
+.cal-edit-fields select, .cal-edit-fields input[type="text"] { width:100%; }
+.cal-edit-field { display:flex; flex-direction:column; gap:4px; }
+.cal-edit-field label { font-size:0.6rem; font-weight:600; color:var(--text-3); letter-spacing:0.06em; text-transform:uppercase; }
+.cal-edit-field select, .cal-edit-field input[type="text"] {
+  font-family:var(--font); font-size:0.78rem;
+  border:1px solid var(--border); border-radius:6px;
+  padding:5px 8px; background:var(--bg-3); color:var(--text-1); outline:none;
+}
+.cal-edit-field select:focus, .cal-edit-field input:focus { border-color:var(--accent); }
+.cal-edit-hint { font-size:0.6rem; color:var(--text-3); margin-top:8px; }
+.cal-edit-companions { display:flex; flex-direction:column; gap:6px; }
+.cal-edit-comp-check { display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--text-2); cursor:pointer; }
+.cal-edit-comp-check input[type="checkbox"] { accent-color:var(--accent); width:14px; height:14px; cursor:pointer; }
+.cal-edit-comp-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ── TIMELINE CARDS ── */
+#timeline { padding:5rem 0; background:var(--bg-1); border-top:1px solid var(--border); }
+#timeline .section-header { padding:0 2rem; }
+.timeline-scroll {
+  overflow-x:auto; padding:1.5rem 2rem 2.5rem;
+  scrollbar-width:thin; scrollbar-color:var(--bg-3) transparent;
+}
+.timeline-scroll::-webkit-scrollbar { height:5px; }
+.timeline-scroll::-webkit-scrollbar-track { background:transparent; }
+.timeline-scroll::-webkit-scrollbar-thumb { background:var(--bg-3); border-radius:3px; }
+.timeline-track { display:flex; gap:1rem; width:max-content; position:relative; }
+.timeline-track::before {
+  content:''; position:absolute; top:50%; left:0; right:0;
+  height:1px; background:var(--border); z-index:0;
+}
+.phase-card {
+  width:240px; background:var(--bg-2); border-radius:12px;
+  padding:1.25rem; position:relative; z-index:1;
+  border:1px solid var(--border); border-left:3px solid var(--text-3);
+  transition:transform 0.3s, border-color 0.3s; flex-shrink:0;
+}
+.phase-card:hover { transform:translateY(-4px); }
+.phase-card[data-type="amigos"] { border-left-color:var(--positive); }
+.phase-card[data-type="pareja"] { border-left-color:var(--accent); }
+.phase-card[data-type="solo"] { border-left-color:var(--c-max); }
+.phase-card[data-type="vuelo"] { border-left-color:var(--warning); }
+.phase-flag { font-size:1.5rem; margin-bottom:0.5rem; }
+.phase-city { font-size:1.1rem; font-weight:700; margin-bottom:0.15rem; }
+.phase-dates { font-size:0.7rem; font-weight:500; color:var(--text-3); margin-bottom:0.7rem; }
+.phase-meta { display:flex; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.7rem; }
+.phase-tag {
+  font-size:0.58rem; font-weight:600; padding:0.2rem 0.5rem;
+  border-radius:4px; background:var(--bg-3); color:var(--text-2);
+}
+.phase-tag.nights { background:rgba(212,112,90,0.12); color:var(--accent); }
+.phase-tag.budget { background:rgba(201,168,76,0.12); color:var(--warning); }
+.phase-companions { display:flex; margin-bottom:0.5rem; }
+.phase-avatar {
+  width:26px; height:26px; border-radius:50%;
+  border:2px solid var(--bg-2); margin-left:-5px;
+  overflow:hidden; background:var(--bg-3);
+}
+.phase-avatar:first-child { margin-left:0; }
+.phase-avatar img { width:100%; height:100%; object-fit:cover; }
+.phase-note { font-size:0.68rem; color:var(--text-3); line-height:1.4; }
+
+/* ── FLIGHTS ── */
+#flights { background:var(--bg-0); border-top:1px solid var(--border); }
+.flights-grid {
+  max-width:1000px; margin:0 auto;
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1rem;
+}
+.flight-card {
+  background:var(--bg-2); border:1px solid var(--border); border-radius:12px;
+  padding:1.5rem; transition:transform 0.3s;
+}
+.flight-card:hover { transform:translateY(-3px); }
+.flight-airline {
+  font-size:0.58rem; font-weight:600; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--warning); margin-bottom:1rem;
+}
+.flight-route { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+.flight-city { text-align:center; }
+.flight-iata { font-size:1.5rem; font-weight:800; line-height:1; }
+.flight-city-name { font-size:0.6rem; color:var(--text-3); margin-top:0.15rem; }
+.flight-arrow { flex:1; display:flex; flex-direction:column; align-items:center; gap:0.25rem; }
+.flight-arrow-line { width:100%; height:1px; background:var(--border); position:relative; }
+.flight-arrow-line::after {
+  content:''; position:absolute; right:0; top:-3px; width:6px; height:6px;
+  border-right:1px solid var(--text-3); border-top:1px solid var(--text-3);
+  transform:rotate(45deg);
+}
+.flight-number-badge { font-size:0.55rem; font-weight:600; color:var(--text-3); }
+.flight-details { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem; }
+.flight-detail-label { font-size:0.52rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-3); margin-bottom:0.1rem; }
+.flight-detail-value { font-size:0.8rem; font-weight:500; }
+.flight-passengers { display:flex; gap:0.4rem; flex-wrap:wrap; }
+.flight-passenger-tag {
+  font-size:0.62rem; font-weight:500; padding:0.2rem 0.6rem;
+  border-radius:4px; background:var(--bg-3); color:var(--text-2);
+}
+.flight-reserva {
+  margin-top:0.85rem; padding-top:0.6rem; border-top:1px solid var(--border);
+  font-size:0.65rem; letter-spacing:0.1em; color:var(--text-3);
+}
+.flight-card--pending {
+  opacity:0.45; border-style:dashed;
+}
+.flight-card--pending .flight-airline { color:var(--text-3); }
+
+/* ── BUDGET ── */
+#budget { background:var(--bg-0); border-top:1px solid var(--border); }
+.budget-container { max-width:960px; margin:0 auto; }
+
+.budget-cards {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:0.75rem; margin-bottom:2rem;
+}
+.budget-card-item { background:var(--bg-2); border:1px solid var(--border); border-radius:10px; padding:1rem; }
+.budget-card-item.over { border-color:rgba(199,80,80,0.4); }
+.budget-card-label { font-size:0.6rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-3); margin-bottom:0.3rem; }
+.budget-card-val { font-size:1.4rem; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; }
+.budget-card-val.ok { color:var(--positive); }
+.budget-card-val.over { color:var(--danger); }
+.budget-card-sub { font-size:0.6rem; color:var(--text-3); margin-top:0.25rem; }
+.budget-card-bar { height:3px; background:var(--bg-3); border-radius:2px; margin-top:0.5rem; overflow:hidden; }
+.budget-card-bar-fill { height:100%; border-radius:2px; transition:width 0.8s; }
+
+.budget-top { display:grid; grid-template-columns:240px 1fr; gap:2.5rem; align-items:start; margin-bottom:1.5rem; }
+.budget-donut-wrapper { position:relative; width:240px; height:240px; }
+.budget-donut-wrapper svg { width:100%; height:100%; transform:rotate(-90deg); }
+.budget-donut-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; }
+.budget-donut-amount { font-size:1.4rem; font-weight:800; line-height:1; }
+.budget-donut-label { font-size:0.55rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-3); margin-top:0.2rem; }
+
+.budget-summary-list { display:flex; flex-direction:column; }
+.budget-summary-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0.6rem 0; border-bottom:1px solid var(--border);
+}
+.budget-summary-row:last-child { border-bottom:none; padding-top:0.7rem; margin-top:0.3rem; border-top:2px solid var(--text-3); }
+.budget-row-left { display:flex; align-items:center; gap:0.5rem; }
+.budget-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.budget-row-name { font-size:0.78rem; font-weight:500; }
+.budget-row-amount { font-size:0.9rem; font-weight:700; font-variant-numeric:tabular-nums; }
+
+.budget-bars-section { margin-top:1.25rem; }
+.budget-bars-title { font-size:0.95rem; font-weight:700; margin-bottom:0.8rem; }
+.budget-bar-row { display:flex; align-items:center; margin-bottom:0.6rem; gap:0.6rem; }
+.budget-bar-label { width:130px; flex-shrink:0; font-size:0.7rem; font-weight:500; text-align:right; color:var(--text-2); }
+.budget-bar-track { flex:1; height:20px; background:var(--bg-3); border-radius:4px; overflow:hidden; }
+.budget-bar-fill {
+  height:100%; border-radius:4px; transition:width 1s cubic-bezier(0.22,1,0.36,1);
+  display:flex; align-items:center; padding-left:0.4rem;
+  font-size:0.55rem; font-weight:700; color:var(--bg-0); white-space:nowrap;
+}
+.budget-bar-amount { width:55px; text-align:right; font-size:0.7rem; font-weight:600; flex-shrink:0; font-variant-numeric:tabular-nums; }
+
+.budget-config {
+  margin-top:1.5rem; background:var(--bg-2); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+}
+.budget-config-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.85rem 1.25rem; cursor:pointer; user-select:none; transition:background 0.15s;
+}
+.budget-config-header:hover { background:var(--bg-3); }
+.budget-config-title { font-size:0.75rem; font-weight:600; }
+.budget-config-toggle { font-size:0.65rem; color:var(--text-3); }
+.budget-config-body { padding:0 1.25rem 1.25rem; border-top:1px solid var(--border); }
+.budget-section-label {
+  font-size:0.6rem; font-weight:600; letter-spacing:0.08em;
+  text-transform:uppercase; color:var(--text-3); margin:0.85rem 0 0.5rem;
+}
+.budget-rates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.4rem; }
+.budget-rate-row { display:flex; align-items:center; gap:6px; }
+.budget-rate-dot { width:8px; height:8px; border-radius:3px; flex-shrink:0; }
+.budget-rate-label { font-size:0.72rem; flex:1; color:var(--text-2); }
+.budget-rate-input {
+  font-family:var(--font); font-size:0.75rem;
+  border:1px solid var(--border); border-radius:6px;
+  padding:3px 6px; background:var(--bg-3); color:var(--text-1);
+  outline:none; width:65px; text-align:right;
+}
+.budget-rate-input:focus { border-color:var(--accent); }
+.budget-rate-unit { font-size:0.6rem; color:var(--text-3); }
+
+.onetime-table { width:100%; border-collapse:collapse; margin-top:0.4rem; }
+.onetime-table th { font-size:0.6rem; color:var(--text-3); font-weight:500; text-align:left; padding:0 6px 4px 0; }
+.onetime-table td { padding:2px 6px 2px 0; vertical-align:middle; }
+.onetime-table input {
+  font-family:var(--font); font-size:0.7rem;
+  border:1px solid var(--border); border-radius:5px;
+  padding:3px 6px; background:var(--bg-3); color:var(--text-1); outline:none; width:100%;
+}
+.onetime-table input[type="number"] { width:72px; text-align:right; }
+.onetime-table input:focus { border-color:var(--accent); }
+.btn-add-row, .btn-del-row {
+  font-family:var(--font); font-size:0.65rem;
+  border:1px solid var(--border); border-radius:5px;
+  background:var(--bg-3); color:var(--text-3); cursor:pointer; padding:2px 7px;
+}
+.btn-del-row { color:var(--danger); border-color:rgba(199,80,80,0.3); }
+.btn-del-row:hover { background:rgba(199,80,80,0.1); }
+.btn-add-row:hover { background:var(--border); }
+
+.budget-gauge { margin-top:1.5rem; padding:1.25rem; background:var(--bg-2); border:1px solid var(--border); border-radius:12px; text-align:center; }
+.budget-gauge-title { font-size:0.6rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3); margin-bottom:0.6rem; }
+.budget-gauge-bar { width:100%; height:10px; background:var(--bg-3); border-radius:5px; overflow:hidden; margin-bottom:0.5rem; }
+.budget-gauge-fill { height:100%; border-radius:5px; transition:width 1.2s cubic-bezier(0.22,1,0.36,1); }
+.budget-gauge-labels { display:flex; justify-content:space-between; font-size:0.7rem; }
+.budget-gauge-spent { font-weight:700; }
+.budget-gauge-total { color:var(--text-3); }
+
+
+
+/* ── TODAY MARKER ── */
+.cal-day.today { box-shadow:inset 0 0 0 2px var(--accent); }
+.cal-day.today::before {
+  content:''; position:absolute; inset:0; border-radius:6px;
+  box-shadow:0 0 8px rgba(212,112,90,0.25); pointer-events:none;
+}
+
+/* ── TOOLTIP ── */
+.cal-tooltip {
+  position:fixed; z-index:250; pointer-events:none;
+  background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+  padding:0.5rem 0.75rem; max-width:220px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.4);
+  font-size:0.68rem; line-height:1.4;
+  opacity:0; transform:translateY(4px);
+  transition:opacity 0.12s, transform 0.12s;
+}
+.cal-tooltip.show { opacity:1; transform:translateY(0); }
+.cal-tooltip-loc { font-weight:600; margin-bottom:2px; }
+.cal-tooltip-comp { color:var(--text-2); }
+.cal-tooltip-note { color:var(--text-3); margin-top:3px; font-style:italic; }
+.cal-tooltip-cost { color:var(--warning); margin-top:3px; font-weight:600; }
+
+/* ── NAV ACTIVE ── */
+.nav-links a.active { color:var(--accent); }
+
+/* ── HAMBURGER ── */
+.nav-hamburger {
+  display:none; background:none; border:none; cursor:pointer; padding:4px;
+  color:var(--text-2); font-size:1.3rem; line-height:1;
+}
+@media (max-width:768px) {
+  .nav-hamburger { display:block; }
+  .nav-links {
+    display:none; position:absolute; top:100%; right:0; left:0;
+    background:rgba(14,16,21,0.95); backdrop-filter:blur(20px);
+    flex-direction:column; padding:1rem 2rem; gap:1rem;
+    border-bottom:1px solid var(--border);
+  }
+  .nav-links.open { display:flex; }
+}
+
+/* ── CALENDAR STATS BAR ── */
+.cal-stats {
+  display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;
+  font-size:0.62rem; font-weight:500; color:var(--text-3);
+}
+.cal-stats span { padding:2px 8px; background:var(--bg-2); border-radius:4px; }
+
+/* ── UNDO/REDO BUTTONS ── */
+.cal-btn[disabled] { opacity:0.3; cursor:default; pointer-events:none; }
+
+/* ── T3.1 SHIFT+CLICK HINT ── */
+.cal-shift-hint {
+  background:var(--bg-2); border:1px solid var(--accent); border-radius:8px;
+  padding:0.5rem 1rem; margin-bottom:0.75rem; font-size:0.68rem; color:var(--text-2);
+  display:flex; align-items:center; gap:0.5rem;
+  animation:panelIn 0.2s ease-out;
+}
+.cal-shift-hint strong { color:var(--accent); }
+.cal-shift-hint-close {
+  margin-left:auto; background:none; border:none; color:var(--text-3); cursor:pointer; font-size:0.9rem;
+}
+
+/* ── T3.2 NOTES VIEW ── */
+.cal-notes-list {
+  background:var(--bg-2); border:1px solid var(--border); border-radius:10px;
+  padding:0.75rem 1rem; margin-bottom:0.75rem; max-height:300px; overflow-y:auto;
+}
+.cal-notes-list-item {
+  display:flex; gap:0.5rem; align-items:baseline; padding:0.3rem 0;
+  border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.1s;
+}
+.cal-notes-list-item:last-child { border-bottom:none; }
+.cal-notes-list-item:hover { background:var(--bg-3); border-radius:4px; }
+.cal-notes-date { font-size:0.62rem; font-weight:600; color:var(--text-3); min-width:70px; }
+.cal-notes-text { font-size:0.68rem; color:var(--text-2); }
+
+/* ── T3.4 COMPANION DOTS ── */
+.cal-day-comp-dots { display:flex; gap:2px; margin-top:2px; justify-content:center; }
+.cal-day-comp-dot { width:4px; height:4px; border-radius:50%; }
+
+/* ── T3.5 SAVE TOAST ── */
+.save-toast {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:300;
+  background:var(--bg-2); border:1px solid var(--positive); border-radius:8px;
+  padding:0.5rem 1rem; font-size:0.7rem; font-weight:600; color:var(--positive);
+  opacity:0; transform:translateY(8px); transition:opacity 0.3s, transform 0.3s;
+  pointer-events:none;
+}
+.save-toast.show { opacity:1; transform:translateY(0); }
+
+@keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+@media (max-width:768px) {
+  .nav-links { display:none; }
+  .countdown { gap:1rem; } .countdown-number { font-size:2rem; }
+  .budget-top { grid-template-columns:1fr; gap:1.5rem; }
+  .budget-donut-wrapper { margin:0 auto; width:180px; height:180px; }
+  .budget-bar-label { width:80px; font-size:0.62rem; }
+  .companion-label { width:85px; font-size:0.65rem; }
+  .flights-grid { grid-template-columns:1fr; }
+  .phase-card { width:220px; }
+  .cal-day { min-height:52px; } .cal-day-comp { display:none; }
+}
+@media (max-width:480px) {
+  section { padding:3.5rem 1rem; }
+  .hero { padding:4rem 1rem 0.75rem; gap:1rem; }
+  .hero h1 { font-size:1.2rem; }
+  .countdown-number { font-size:1.1rem; }
+  .cal-day { min-height:46px; } .cal-day-num { font-size:0.58rem; }
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <div class="nav-logo">Eurotrip '26</div>
+  <button class="nav-hamburger" id="navHamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#calendar">Calendario</a></li>
+    <li><a href="#budget">Presupuesto</a></li>
+    <li><a href="#companions">Compañía</a></li>
+    <li><a href="#timeline">Itinerario</a></li>
+    <li><a href="#flights">Vuelos</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="hero">
+  <h1>Euro<span class="accent">trip</span> 2026</h1>
+  <div class="countdown" id="countdown"></div>
+</section>
+
+<section id="calendar">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Planifica día a día</p>
+    <h2 class="section-title">Calendario</h2>
+  </div>
+  <div class="cal-wrapper reveal" id="calendarWrapper"></div>
+</section>
+
+<section id="budget">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Los números</p>
+    <h2 class="section-title">Presupuesto</h2>
+  </div>
+  <div class="budget-container reveal" id="budgetContainer"></div>
+</section>
+
+<section id="companions">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Quién está cuándo</p>
+    <h2 class="section-title">Compañeros de viaje</h2>
+  </div>
+  <div class="companion-track reveal" id="companionTrack"></div>
+</section>
+
+<section id="timeline">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Fase a fase</p>
+    <h2 class="section-title">Itinerario</h2>
+  </div>
+  <div class="timeline-scroll"><div class="timeline-track" id="timelineTrack"></div></div>
+</section>
+
+<section id="flights">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">En el aire</p>
+    <h2 class="section-title">Vuelos</h2>
+  </div>
+  <div class="flights-grid reveal" id="flightsGrid"></div>
+</section>
+
+<div class="save-toast" id="saveToast">✓ Guardado</div>
+
+<script>
+// =============================================
+// CODES & COLORS
+// =============================================
+const LOCS = [
+  { v:"tbd",      label:"Sin definir",      short:"?",    country:"none" },
+  { v:"transito", label:"En tránsito",       short:"···",  country:"none" },
+  { v:"cl-scl",   label:"Santiago, Chile",   short:"SCL",  country:"cl"   },
+  { v:"es-mad",   label:"Madrid",            short:"MAD",  country:"es"   },
+  { v:"es-bcn",   label:"Barcelona",         short:"BCN",  country:"es"   },
+  { v:"es-x",     label:"España (otra)",     short:"ESP",  country:"es"   },
+  { v:"it-flo",   label:"Florencia",         short:"FLO",  country:"it"   },
+  { v:"it-rom",   label:"Roma",              short:"ROM",  country:"it"   },
+  { v:"it-nap",   label:"Nápoles",           short:"NAP",  country:"it"   },
+  { v:"it-sic",   label:"Sicilia",           short:"SIC",  country:"it"   },
+  { v:"it-road",  label:"Italia (en ruta)",  short:"ROAD", country:"it_road" },
+  { v:"it-x",     label:"Italia (otra)",     short:"IT",   country:"it"   },
+  { v:"uk-lon",   label:"Londres",           short:"LON",  country:"uk"   },
+  { v:"de-ber",   label:"Berlín",            short:"BER",  country:"de"   },
+  { v:"nl-utr",   label:"Utrecht",           short:"UTR",  country:"nl"   },
+  { v:"other",    label:"Otro destino",      short:"???",  country:"none" },
+];
+
+// Companion system — checkbox-based, supports any combination
+const COMPANION_LIST = [
+  {id:'jaci', label:'Jacinta', short:'J', colors:['#D4705A'], people:['Jaci']},
+  {id:'ts',   label:'Tomás y Sofi', short:'TS', colors:['#5A9E7F','#7BBF9E'], people:['Tomás','Sofi']},
+  {id:'lg',   label:'Lucas y Gi', short:'LG', colors:['#C9A84C','#E0C36A'], people:['Lucas','Gi']},
+  {id:'gn',   label:'Gonzalo y Nieves', short:'GN', colors:['#8B7DB8','#A899D0'], people:['Gonzalo','Nieves']},
+  {id:'sn',   label:'Santi y Nacha', short:'SN', colors:['#D08B5B','#E0A87A'], people:['Santi','Nacha']},
+];
+function parseComp(comp) { return (!comp||comp==='tbd') ? [] : comp.split(',').filter(Boolean); }
+function buildComp(ids) { if(!ids.length) return ''; return ids.slice().sort((a,b)=>COMPANION_LIST.findIndex(c=>c.id===a)-COMPANION_LIST.findIndex(c=>c.id===b)).join(','); }
+function getCompDots(comp) {
+  if(comp==='tbd') return [];
+  const dots=['#5B7FA5'];
+  parseComp(comp).forEach(id=>{const c=COMPANION_LIST.find(x=>x.id===id);if(c)dots.push(...c.colors);});
+  return dots;
+}
+function getCompLabel(comp) {
+  if(comp==='tbd') return 'Sin definir';
+  const ids=parseComp(comp);
+  if(!ids.length) return 'Solo Max';
+  return 'Max + '+ids.map(id=>{const c=COMPANION_LIST.find(x=>x.id===id);return c?c.label:id;}).join(' + ');
+}
+function getCompShort(comp) {
+  if(comp==='tbd') return '?';
+  const ids=parseComp(comp);
+  if(!ids.length) return 'M';
+  return 'M+'+ids.map(id=>{const c=COMPANION_LIST.find(x=>x.id===id);return c?c.short:id;}).join('+');
+}
+// Migrate legacy comp strings from old dropdown format
+const LEGACY_COMP={max:'',mj:'jaci','mj-ts':'jaci,ts','m-ts':'ts','mj-gn':'jaci,gn','mj-lg':'jaci,lg','mj-sn':'jaci,sn'};
+function migrateComp(v) { return v in LEGACY_COMP ? LEGACY_COMP[v] : v; }
+
+// Calendar cell colors: [bg, fg, flag] — dark-mode optimized
+const COL = {
+  none:    { bg:"#1E2129", fg:"#6B6F7B", flag:"" },
+  cl:      { bg:"#1E2129", fg:"#7A7B82", flag:"🇨🇱" },
+  es:      { bg:"#2A2515", fg:"#D4A843", flag:"🇪🇸" },
+  it:      { bg:"#152A20", fg:"#5ABF8A", flag:"🇮🇹" },
+  it_road: { bg:"#0F2E1F", fg:"#3DD48A", flag:"🇮🇹" },
+  uk:      { bg:"#162230", fg:"#6BA5C8", flag:"🇬🇧" },
+  de:      { bg:"#1E1A2E", fg:"#A090D0", flag:"🇩🇪" },
+  nl:      { bg:"#2A1F15", fg:"#D09B5A", flag:"🇳🇱" },
+};
+
+const COUNTRY_LABELS = { es:"España", it:"Italia", it_road:"Italia (ruta)", uk:"Reino Unido", de:"Alemania", nl:"Países Bajos", cl:"Chile", none:"Otro" };
+const FULL_MONTHS = ["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio"];
+const WD = ["L","M","X","J","V","S","D"];
+
+// Person → avatar path & semantic color
+const PEOPLE = {
+  'Max':     { avatar:'avatars/max.svg',     color:'#5B7FA5' },
+  'Jaci':    { avatar:'avatars/jacinta.svg', color:'#D4705A' },
+  'Jacinta': { avatar:'avatars/jacinta.svg', color:'#D4705A' },
+  'Tomás':   { avatar:'avatars/tomas.svg',   color:'#5A9E7F' },
+  'Sofi':    { avatar:'avatars/sofi.svg',    color:'#7BBF9E' },
+  'Lucas':   { avatar:'avatars/lucas.svg',   color:'#C9A84C' },
+  'Gi':      { avatar:'avatars/gi.svg',      color:'#E0C36A' },
+  'Gonzalo': { avatar:'avatars/gonzalo.svg', color:'#8B7DB8' },
+  'Nieves':  { avatar:'avatars/nieves.svg',  color:'#A899D0' },
+  'Santi':   { avatar:'avatars/santi.svg',   color:'#D08B5B' },
+  'Nacha':   { avatar:'avatars/nacha.svg',   color:'#E0A87A' },
+};
+
+function gL(v) { return LOCS.find(l => l.v === v) || LOCS[0]; }
+function gCol(country) { return COL[country] || COL.none; }
+function fmtK(y,m,d) { return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+function dow(y,m,d) { const r = new Date(y,m-1,d).getDay(); return r === 0 ? 6 : r - 1; }
+
+function allDays() {
+  const days = [], end = new Date(2026, 5, 30);
+  let cur = new Date(2026, 4, 1);
+  while (cur <= end) {
+    days.push({ y:cur.getFullYear(), m:cur.getMonth()+1, d:cur.getDate(), k:fmtK(cur.getFullYear(), cur.getMonth()+1, cur.getDate()) });
+    cur.setDate(cur.getDate()+1);
+  }
+  return days;
+}
+const DAYS = allDays();
+function buildRows() {
+  const rows = []; let row = null;
+  DAYS.forEach(day => {
+    const wd = dow(day.y, day.m, day.d);
+    if (wd === 0 || !row) { row = Array(7).fill(null); rows.push(row); }
+    row[wd] = day;
+  });
+  return rows;
+}
+const ROWS = buildRows();
+
+// =============================================
+// STATE
+// =============================================
+function initState() {
+  return {
+    "2026-05-01":{"loc":"cl-scl","comp":"jaci","note":""},"2026-05-02":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-05-03":{"loc":"cl-scl","comp":"jaci","note":""},"2026-05-04":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-05-05":{"loc":"cl-scl","comp":"jaci","note":""},"2026-05-06":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-05-07":{"loc":"cl-scl","comp":"jaci","note":""},"2026-05-08":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-05-09":{"loc":"cl-scl","comp":"jaci","note":""},"2026-05-10":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-05-11":{"loc":"cl-scl","comp":"jaci","note":""},"2026-05-12":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-05-13":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-05-14":{"loc":"cl-scl","comp":"jaci","note":"Vuelo SCL → MAD (IB0118, sale 10:40)"},
+    "2026-05-15":{"loc":"es-mad","comp":"lg","note":"Llegada a Madrid (05:20)"},
+    "2026-05-16":{"loc":"es-mad","comp":"jaci,lg","note":"Llegada Jaci (17:00)"},
+    "2026-05-17":{"loc":"es-mad","comp":"jaci,lg","note":""},"2026-05-18":{"loc":"es-mad","comp":"jaci,lg","note":"Vuelo MAD→PMO 22:10"},
+    "2026-05-19":{"loc":"it-road","comp":"jaci,ts","note":"Roadtrip Sicilia"},
+    "2026-05-20":{"loc":"it-road","comp":"jaci,ts","note":"Roadtrip Sicilia"},
+    "2026-05-21":{"loc":"it-road","comp":"jaci,ts","note":"Roadtrip Sicilia"},
+    "2026-05-22":{"loc":"it-road","comp":"jaci,ts","note":"Roadtrip Sicilia"},
+    "2026-05-23":{"loc":"it-road","comp":"jaci,ts","note":"Roadtrip Sicilia"},
+    "2026-05-24":{"loc":"it-road","comp":"jaci,ts","note":"Roadtrip Sicilia"},
+    "2026-05-25":{"loc":"it-road","comp":"jaci,ts","note":"Roadtrip Sicilia"},
+    "2026-05-26":{"loc":"it-rom","comp":"jaci","note":""},"2026-05-27":{"loc":"it-rom","comp":"jaci","note":""},
+    "2026-05-28":{"loc":"it-rom","comp":"jaci","note":""},
+    "2026-05-29":{"loc":"uk-lon","comp":"jaci,ts","note":"Cowork"},
+    "2026-05-30":{"loc":"uk-lon","comp":"jaci,ts","note":""},
+    "2026-05-31":{"loc":"uk-lon","comp":"jaci,ts","note":""},
+    "2026-06-01":{"loc":"uk-lon","comp":"jaci,ts","note":"Cowork"},
+    "2026-06-02":{"loc":"uk-lon","comp":"jaci,ts","note":"Cowork"},
+    "2026-06-03":{"loc":"uk-lon","comp":"jaci,ts","note":"Cowork"},
+    "2026-06-04":{"loc":"uk-lon","comp":"jaci,ts","note":"Cowork"},
+    "2026-06-05":{"loc":"uk-lon","comp":"jaci,ts","note":"Cowork"},
+    "2026-06-06":{"loc":"uk-lon","comp":"jaci,ts","note":""},
+    "2026-06-07":{"loc":"uk-lon","comp":"jaci,ts","note":"Jaci vuela a SCL"},
+    "2026-06-08":{"loc":"nl-utr","comp":"sn","note":""},"2026-06-09":{"loc":"nl-utr","comp":"sn","note":""},
+    "2026-06-10":{"loc":"nl-utr","comp":"sn","note":""},
+    "2026-06-11":{"loc":"de-ber","comp":"gn","note":""},
+    "2026-06-12":{"loc":"de-ber","comp":"gn","note":""},
+    "2026-06-13":{"loc":"de-ber","comp":"gn","note":""},
+    "2026-06-14":{"loc":"de-ber","comp":"gn","note":""},
+    "2026-06-15":{"loc":"de-ber","comp":"gn","note":""},
+    "2026-06-16":{"loc":"de-ber","comp":"gn","note":""},"2026-06-17":{"loc":"de-ber","comp":"gn","note":""},
+    "2026-06-18":{"loc":"es-mad","comp":"lg","note":""},"2026-06-19":{"loc":"es-mad","comp":"lg","note":""},
+    "2026-06-20":{"loc":"es-mad","comp":"lg","note":""},
+    "2026-06-21":{"loc":"transito","comp":"","note":"Vuelo MAD → SCL (IB0113, sale 13:00)"},
+    "2026-06-22":{"loc":"cl-scl","comp":"jaci","note":"Llegada a Santiago (20:20)"},
+    "2026-06-23":{"loc":"cl-scl","comp":"jaci","note":""},"2026-06-24":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-06-25":{"loc":"cl-scl","comp":"jaci","note":""},"2026-06-26":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-06-27":{"loc":"cl-scl","comp":"jaci","note":""},"2026-06-28":{"loc":"cl-scl","comp":"jaci","note":""},
+    "2026-06-29":{"loc":"cl-scl","comp":"jaci","note":""},"2026-06-30":{"loc":"cl-scl","comp":"jaci","note":""},
+  };
+}
+
+const STORAGE_KEY = "europa2026_calendar", STORAGE_BUDGET_KEY = "europa2026_budget";
+function loadCal() { try { const d=JSON.parse(localStorage.getItem(STORAGE_KEY)); if(d){Object.values(d).forEach(v=>{if(v&&v.comp)v.comp=migrateComp(v.comp);});} return d; } catch { return null; } }
+function saveCal(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {} }
+function loadBudget() { try { return JSON.parse(localStorage.getItem(STORAGE_BUDGET_KEY)); } catch { return null; } }
+function saveBudget(b) { try { localStorage.setItem(STORAGE_BUDGET_KEY, JSON.stringify(b)); } catch {} }
+
+let calData = loadCal() || initState();
+let selectedDay = null, hoveredDay = null, saveTimeout = null;
+const undoStack = [], redoStack = [], UNDO_LIMIT = 30;
+let shiftHintShown = localStorage.getItem('eurotrip_shift_hint_done') === '1';
+let notesViewOpen = false;
+let firstSelectDone = false; // tracks if user has selected a day this session
+
+function initBudgetData() {
+  return {
+    total:4000,
+    dailyRates:{es:45,it:90,it_road:75,uk:65,de:45,nl:45,cl:0,none:0},
+    oneTimeCosts:[
+      {id:"1",label:"Vuelo SCL → MAD",amount:750},{id:"2",label:"Auto Italia — parte Max",amount:150},
+      {id:"3",label:"Gasolina Italia",amount:80},{id:"4",label:"Cenas con anfitriones (x4)",amount:200},
+      {id:"5",label:"Vuelos intra-Europa",amount:350},{id:"6",label:"Vuelo MAD → SCL",amount:800},
+    ],
+  };
+}
+let budgetState = loadBudget() || initBudgetData();
+let budgetConfigOpen = false;
+
+function pushUndo() { undoStack.push(JSON.stringify(calData)); if(undoStack.length>UNDO_LIMIT) undoStack.shift(); redoStack.length=0; }
+function persist() { saveCal(calData); showSaveMsg(); }
+function showSaveMsg() {
+  const el = document.getElementById('saveToast'); if (!el) return;
+  el.classList.add('show'); clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// =============================================
+// EXPORTS
+// =============================================
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(calData,null,2)],{type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = "itinerario_europa_2026.json"; a.click();
+}
+function importJSON() {
+  const input = document.createElement("input"); input.type="file"; input.accept=".json";
+  input.onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => { try { pushUndo(); calData = JSON.parse(ev.target.result); Object.values(calData).forEach(v=>{if(v&&v.comp)v.comp=migrateComp(v.comp);}); selectedDay=null; persist(); renderCalendar(); renderCompanions(); renderTimeline(); renderBudget(); } catch { alert("JSON no válido."); } };
+    r.readAsText(f);
+  }; input.click();
+}
+function icsEscape(s) { return (s||"").replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n"); }
+function exportICS() {
+  const keys = Object.keys(calData).sort(), events = []; let cur = null;
+  keys.forEach(k => { const d = calData[k]; if (!d||d.loc==="tbd"||d.loc==="transito"){cur=null;return;} if(cur&&cur.loc===d.loc&&cur.comp===d.comp){cur.end=k;}else{if(cur)events.push(cur);cur={start:k,end:k,loc:d.loc,comp:d.comp,note:d.note||""};} });
+  if (cur) events.push(cur);
+  const toD = k=>k.replace(/-/g,""), nxtD = k=>{const[y,m,d]=k.split("-").map(Number);const dt=new Date(y,m-1,d);dt.setDate(dt.getDate()+1);return fmtK(dt.getFullYear(),dt.getMonth()+1,dt.getDate()).replace(/-/g,"");};
+  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Eurotrip 2026//ES","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Eurotrip 2026","X-APPLE-CALENDAR-COLOR:#D4705A"];
+  events.forEach((ev,i)=>{L.push("BEGIN:VEVENT","UID:eurotrip26-"+i+"-"+ev.start+"@viaje","DTSTART;VALUE=DATE:"+toD(ev.start),"DTEND;VALUE=DATE:"+nxtD(ev.end),"SUMMARY:"+icsEscape(gL(ev.loc).label)+" — "+icsEscape(getCompLabel(ev.comp)),...(ev.note?["DESCRIPTION:"+icsEscape(ev.note)]:[]),"TRANSP:TRANSPARENT","END:VEVENT");});
+  L.push("END:VCALENDAR");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([L.join("\r\n")+"\r\n"],{type:"text/calendar;charset=utf-8"}));
+  a.download = "eurotrip2026.ics"; a.click();
+}
+function resetCal() { if(confirm("¿Resetear al itinerario inicial?")){pushUndo();calData=initState();selectedDay=null;persist();renderCalendar();renderCompanions();renderTimeline();renderBudget();} }
+
+// =============================================
+// CALENDAR
+// =============================================
+function renderCalendar() {
+  const wrapper = document.getElementById('calendarWrapper');
+  const todayK = fmtK(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate());
+
+  // Stats
+  const countryCount = {}; let undefinedDays = 0;
+  DAYS.forEach(({k}) => {
+    const d = calData[k]||{loc:"tbd"}; const c = gL(d.loc).country;
+    if (c==='none'||c==='cl') { if(c==='none') undefinedDays++; }
+    else countryCount[c] = (countryCount[c]||0)+1;
+  });
+  const totalEurope = Object.values(countryCount).reduce((a,b)=>a+b,0);
+  const statsHtml = [`${totalEurope} días en Europa`, ...Object.entries(countryCount).map(([c,n])=>`${COUNTRY_LABELS[c]||c}: ${n}d`), undefinedDays>0?`${undefinedDays} sin definir`:null].filter(Boolean).map(s=>`<span>${s}</span>`).join('');
+
+  const legend = [{c:"none",l:"Sin definir"},{c:"cl",l:"Chile"},{c:"es",l:"España"},{c:"it_road",l:"Italia (ruta)"},{c:"it",l:"Italia"},{c:"uk",l:"Reino Unido"},{c:"de",l:"Alemania"},{c:"nl",l:"Países Bajos"}];
+
+  let html = `<div class="cal-toolbar">
+    <button class="cal-btn" onclick="calUndo()" ${undoStack.length===0?'disabled':''} title="Ctrl+Z">↩ Deshacer</button>
+    <button class="cal-btn" onclick="calRedo()" ${redoStack.length===0?'disabled':''} title="Ctrl+Shift+Z">↪ Rehacer</button>
+    <button class="cal-btn" onclick="exportJSON()">JSON</button>
+    <button class="cal-btn" onclick="importJSON()">Importar</button>
+    <button class="cal-btn" onclick="exportICS()">.ics</button>
+    <button class="cal-btn" onclick="notesViewOpen=!notesViewOpen;renderCalendar()">📝 Notas</button>
+    <button class="cal-btn danger" onclick="resetCal()">Resetear</button>
+  </div>
+  <div class="cal-stats">${statsHtml}</div>`;
+
+  // T3.1 Shift+click hint (one time)
+  if (!shiftHintShown && firstSelectDone) {
+    html += `<div class="cal-shift-hint"><strong>Tip:</strong> Seleccioná un día, luego <strong>Shift+clic</strong> en otro para aplicar ubicación y compañía a todo el rango.<button class="cal-shift-hint-close" onclick="shiftHintShown=true;localStorage.setItem('eurotrip_shift_hint_done','1');renderCalendar()">×</button></div>`;
+  }
+
+  // T3.2 Notes view
+  if (notesViewOpen) {
+    const noteDays = DAYS.filter(({k})=>(calData[k]||{}).note).map(({k})=>{
+      const d=calData[k]; const[y,m,dd]=k.split('-').map(Number);
+      const ds=new Date(y,m-1,dd).toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+      return `<div class="cal-notes-list-item" onclick="selectedDay='${k}';notesViewOpen=false;renderCalendar()"><span class="cal-notes-date">${ds}</span><span class="cal-notes-text">${d.note}</span></div>`;
+    });
+    html += `<div class="cal-notes-list">${noteDays.length?noteDays.join(''):'<span style="font-size:0.68rem;color:var(--text-3)">No hay notas aún.</span>'}</div>`;
+  }
+
+  html += `<div class="cal-legend">${legend.map(({c,l})=>{const col=gCol(c);return `<span class="cal-legend-item" style="background:${col.bg};color:${col.fg};border:1px solid ${col.fg}44">${l}</span>`;}).join('')}</div>
+  <div class="cal-weekday-header">${WD.map(w=>`<div>${w}</div>`).join('')}</div>`;
+
+  ROWS.forEach((row,ri) => {
+    const ms = row.find(d=>d&&d.d===1);
+    if (ms) html += `<div class="cal-month-sep"><span class="cal-month-sep-label">${FULL_MONTHS[ms.m]}</span><div class="cal-month-sep-line"></div></div>`;
+
+    html += `<div class="cal-week">`;
+    row.forEach(day => {
+      if (!day) { html += `<div class="cal-day empty"></div>`; return; }
+      const d = calData[day.k]||{loc:"tbd",comp:"tbd",note:""};
+      const loc = gL(d.loc), col = gCol(loc.country);
+      const isSel = selectedDay===day.k;
+      const isToday = day.k===todayK;
+      const hasFlight = d.loc==='transito'||(d.note&&/vuelo|→.*\(/i.test(d.note));
+      html += `<div class="cal-day${isSel?' selected':''}${isToday?' today':''}" style="background:${col.bg}" data-key="${day.k}" onclick="handleDayClick('${day.k}',event)" onmouseenter="handleDayHover('${day.k}')" onmouseleave="handleDayLeave()" tabindex="0">
+        ${col.flag||hasFlight?`<span class="cal-day-flag">${col.flag||''}${hasFlight?' ✈︎':''}</span>`:''}
+        <span class="cal-day-num" style="color:${col.fg}">${day.d}</span>
+        <span class="cal-day-loc" style="color:${col.fg}">${loc.short}</span>
+        <div class="cal-day-comp-dots">${getCompDots(d.comp).map(c=>`<div class="cal-day-comp-dot" style="background:${c}"></div>`).join('')}</div>
+        ${d.note?`<div class="cal-day-dot" style="background:${col.fg}"></div>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  // Budget mini-summary strip
+  const bs = computeBudgetTotals();
+  const fmt = n => Math.round(n).toLocaleString('es-CL');
+  const europeDays = DAYS.filter(({k}) => { const d=calData[k]||{loc:"tbd"}; const c=gL(d.loc).country; return c!=='cl'&&c!=='none'; }).length;
+  const costPerDay = europeDays > 0 ? Math.round(bs.projected / europeDays) : 0;
+  const balClass = bs.balance < 0 ? 'color:var(--danger)' : 'color:var(--positive)';
+  html += `<div class="cal-budget-strip">
+    <div class="cal-budget-strip-item"><div class="cal-budget-strip-val">€${fmt(bs.projected)}</div><div class="cal-budget-strip-label">Proyectado</div></div>
+    <div class="cal-budget-strip-item"><div class="cal-budget-strip-val" style="${balClass}">${bs.balance<0?'−':'+'}€${fmt(Math.abs(bs.balance))}</div><div class="cal-budget-strip-label">${bs.balance<0?'Exceso':'Saldo'}</div></div>
+    <div class="cal-budget-strip-item"><div class="cal-budget-strip-val">${europeDays}</div><div class="cal-budget-strip-label">Días en Europa</div></div>
+    <div class="cal-budget-strip-item"><div class="cal-budget-strip-val">€${costPerDay}</div><div class="cal-budget-strip-label">Costo/día</div></div>
+  </div>`;
+
+  wrapper.innerHTML = html;
+  showEditPanel();
+}
+
+function showEditPanel() {
+  // Remove any existing panel
+  const old = document.getElementById('calEditOverlay');
+  if (old) old.remove();
+  const oldP = document.getElementById('calEditPanel');
+  if (oldP) oldP.remove();
+
+  if (!selectedDay) return;
+  const cell = document.querySelector(`.cal-day[data-key="${selectedDay}"]`);
+  if (!cell) return;
+
+  const sd = calData[selectedDay]||{loc:"tbd",comp:"tbd",note:""};
+  const[y,m,d]=selectedDay.split("-").map(Number);
+  const ds = new Date(y,m-1,d).toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"});
+
+  // Overlay to catch outside clicks
+  const overlay = document.createElement('div');
+  overlay.className = 'cal-edit-overlay';
+  overlay.id = 'calEditOverlay';
+  overlay.onclick = () => { selectedDay=null; renderCalendar(); };
+  document.body.appendChild(overlay);
+
+  // Panel
+  const panel = document.createElement('div');
+  panel.className = 'cal-edit-panel';
+  panel.id = 'calEditPanel';
+  panel.innerHTML = `
+    <div class="cal-edit-header"><span class="cal-edit-title">${ds}</span><button class="cal-edit-close" onclick="selectedDay=null;renderCalendar()">×</button></div>
+    <div class="cal-edit-fields">
+      <div class="cal-edit-field"><label>Ubicación</label><select onchange="updateDay('${selectedDay}','loc',this.value)">${LOCS.map(l=>`<option value="${l.v}"${sd.loc===l.v?' selected':''}>${l.label}</option>`).join('')}</select></div>
+      <div class="cal-edit-field" style="width:100%"><label>Compañía</label><div class="cal-edit-companions">${COMPANION_LIST.map(c=>{const checked=parseComp(sd.comp).includes(c.id);return `<label class="cal-edit-comp-check"><input type="checkbox" ${checked?'checked ':''}onchange="toggleCompanion('${selectedDay}','${c.id}',this.checked)"><span class="cal-edit-comp-dot" style="background:${c.colors[0]}"></span>${c.label}</label>`;}).join('')}</div></div>
+      <div class="cal-edit-field" style="width:100%"><label>Nota</label><input type="text" value="${(sd.note||'').replace(/"/g,'&quot;')}" placeholder="Agrega una nota..." onchange="updateDay('${selectedDay}','note',this.value)"></div>
+    </div>
+    <p class="cal-edit-hint">Shift+clic en otro día para aplicar ubicación y compañía al rango.</p>`;
+  document.body.appendChild(panel);
+
+  // Position near cell
+  const rect = cell.getBoundingClientRect();
+  const pw = 340, ph = panel.offsetHeight;
+  let left = rect.right + 8;
+  let top = rect.top;
+  // If goes off right, put it to the left of the cell
+  if (left + pw > window.innerWidth - 16) left = rect.left - pw - 8;
+  // If still off-screen, center horizontally
+  if (left < 8) left = Math.max(8, (window.innerWidth - pw) / 2);
+  // Clamp vertically
+  if (top + ph > window.innerHeight - 16) top = window.innerHeight - ph - 16;
+  if (top < 8) top = 8;
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+}
+
+function handleDayClick(k,e) {
+  if (e.shiftKey&&selectedDay&&selectedDay!==k) {
+    pushUndo();
+    const sd=calData[selectedDay]||{loc:"tbd",comp:"tbd",note:""};
+    const ak=DAYS.map(d=>d.k),a=ak.indexOf(selectedDay),b=ak.indexOf(k);
+    const[lo,hi]=a<=b?[a,b]:[b,a];
+    for(let i=lo;i<=hi;i++){const key=ak[i];calData[key]={...(calData[key]||{loc:"tbd",comp:"tbd",note:""}),loc:sd.loc,comp:sd.comp};}
+    selectedDay=k;hoveredDay=null;persist();renderCalendar();renderCompanions();renderTimeline();renderBudget();return;
+  } else {
+    selectedDay=selectedDay===k?null:k; hoveredDay=null;
+    if (selectedDay && !firstSelectDone) firstSelectDone = true;
+    if (e.shiftKey && selectedDay) { shiftHintShown=true; localStorage.setItem('eurotrip_shift_hint_done','1'); }
+  }
+  renderCalendar();
+}
+function handleDayHover(k) {
+  if (!selectedDay || hoveredDay === k) return;
+  const prev = hoveredDay;
+  hoveredDay = k;
+  updateRangeClasses(prev);
+}
+function handleDayLeave() {
+  if (!hoveredDay) return;
+  const prev = hoveredDay;
+  hoveredDay = null;
+  updateRangeClasses(prev);
+}
+function updateRangeClasses() {
+  const allCells = document.querySelectorAll('.cal-day[data-key]');
+  let rangeKeys = new Set();
+  if (selectedDay && hoveredDay && selectedDay !== hoveredDay) {
+    const ak = DAYS.map(d=>d.k), a = ak.indexOf(selectedDay), b = ak.indexOf(hoveredDay);
+    if (a>=0 && b>=0) { const [lo,hi] = a<=b?[a,b]:[b,a]; rangeKeys = new Set(ak.slice(lo,hi+1)); }
+  }
+  allCells.forEach(cell => {
+    const key = cell.dataset.key;
+    const inRange = rangeKeys.has(key) && key !== selectedDay;
+    cell.classList.toggle('in-range', inRange);
+  });
+}
+function updateDay(k,field,value) { pushUndo(); calData[k]={...(calData[k]||{loc:"tbd",comp:"tbd",note:""}),[field]:value}; persist(); renderCalendar(); renderCompanions(); renderTimeline(); renderBudget(); }
+function toggleCompanion(day,id,checked) { const cur=parseComp((calData[day]||{}).comp||''); const next=checked?[...cur,id]:cur.filter(x=>x!==id); updateDay(day,'comp',buildComp(next)); }
+
+// =============================================
+// COUNTDOWN
+// =============================================
+const TRIP_START = new Date('2026-05-14T10:40:00-04:00');
+function updateCountdown() {
+  const diff = TRIP_START - new Date(), el = document.getElementById('countdown');
+  if(diff<=0){el.innerHTML='<div class="countdown-item"><div class="countdown-number">🎉</div><div class="countdown-label">¡En viaje!</div></div>';return;}
+  const d=Math.floor(diff/864e5),h=Math.floor((diff%864e5)/36e5),m=Math.floor((diff%36e5)/6e4);
+  el.innerHTML=`<div class="countdown-item"><div class="countdown-number">${d}</div><div class="countdown-label">días</div></div><div class="countdown-item"><div class="countdown-number">${h}</div><div class="countdown-label">horas</div></div><div class="countdown-item"><div class="countdown-number">${m}</div><div class="countdown-label">minutos</div></div>`;
+}
+
+// =============================================
+// COMPANIONS
+// =============================================
+function deriveCompanionData() {
+  const ranges = {};
+  COMPANION_LIST.forEach(c => ranges[c.id] = []);
+  const keys = Object.keys(calData).filter(k => { const d=calData[k]; return d && d.loc!=='cl-scl' && d.loc!=='tbd'; }).sort();
+  keys.forEach(k => {
+    parseComp(calData[k].comp).forEach(id => {
+      if (!ranges[id]) return;
+      const segs = ranges[id], last = segs[segs.length-1];
+      if (last) { const diff=(new Date(k)-new Date(last.end))/864e5; if(diff<=1){last.end=k;return;} }
+      segs.push({start:k,end:k});
+    });
+  });
+  return COMPANION_LIST.map(c => {
+    const segs = ranges[c.id];
+    if (!segs.length) return null;
+    if (segs.length===1) return {name:c.label,color:c.colors[0],start:segs[0].start,end:segs[0].end};
+    return {name:c.label,color:c.colors[0],segments:segs};
+  }).filter(Boolean);
+}
+
+function renderCompanions() {
+  const container=document.getElementById('companionTrack');
+  const tripDays=Object.keys(calData).sort().filter(k=>{const d=calData[k];return d&&d.loc!=='cl-scl'&&d.loc!=='tbd';});
+  if(!tripDays.length) return;
+  const ts=new Date(tripDays[0]),te=new Date(tripDays[tripDays.length-1]),td=(te-ts)/864e5||1;
+  const pct=d=>((new Date(d)-ts)/864e5)/td*100;
+  const pctW=(s,e)=>((new Date(e)-new Date(s))/864e5)/td*100;
+  const MS=['','ene','feb','mar','abr','may','jun','jul'];
+  const companionData = deriveCompanionData();
+
+  let html=`<div class="companion-row"><div class="companion-label">Max</div><div class="companion-bar-container"><div class="companion-bar" style="left:0;width:100%;background:#5B7FA5;">Max — todo el viaje</div></div></div>`;
+  companionData.forEach(c=>{
+    html+=`<div class="companion-row"><div class="companion-label">${c.name}</div><div class="companion-bar-container">`;
+    if(c.segments){c.segments.forEach(s=>{html+=`<div class="companion-bar" style="left:${pct(s.start)}%;width:${pctW(s.start,s.end)}%;background:${c.color};"></div>`;});}
+    else{html+=`<div class="companion-bar" style="left:${pct(c.start)}%;width:${pctW(c.start,c.end)}%;background:${c.color};">${c.name}</div>`;}
+    html+=`</div></div>`;
+  });
+  // Dynamic axis labels (weekly from trip start)
+  const axisLabels=[];for(let d=new Date(ts);d<=te;d.setDate(d.getDate()+7)){axisLabels.push(`${d.getDate()} ${MS[d.getMonth()+1]}`);}
+  html+=`<div class="companion-dates-axis"><div class="companion-label"></div><div class="axis-container">${axisLabels.map(d=>`<span>${d}</span>`).join('')}</div></div>`;
+  container.innerHTML=html;
+}
+
+// =============================================
+// TIMELINE
+// =============================================
+function derivePhases() {
+  const MS=['','ene','feb','mar','abr','may','jun','jul'];
+  function fmtD(k){const[,m,d]=k.split('-').map(Number);return `${d} ${MS[m]}`;}
+  function fmtRange(s,e){
+    if(s===e) return fmtD(s);
+    const[,ms,ds]=s.split('-').map(Number),[,me,de]=e.split('-').map(Number);
+    return ms===me ? `${ds} – ${de} ${MS[ms]}` : `${fmtD(s)} – ${fmtD(e)}`;
+  }
+  const result=[];
+  const keys=Object.keys(calData).sort().filter(k=>{const d=calData[k];return d&&d.loc!=='cl-scl'&&d.loc!=='tbd';});
+  let cur=null;
+  keys.forEach(k=>{const d=calData[k];if(cur&&cur.loc===d.loc){cur.end=k;cur.days.push(d);}else{if(cur)result.push(cur);cur={loc:d.loc,start:k,end:k,days:[d]};}});
+  if(cur) result.push(cur);
+  return result.map(p=>{
+    const loc=gL(p.loc),col=gCol(loc.country),isTransit=p.loc==='transito';
+    const nights=isTransit?0:p.days.length;
+    const compIds=new Set();
+    p.days.forEach(d=>parseComp(d.comp).forEach(id=>compIds.add(id)));
+    const companions=['Max'];
+    compIds.forEach(id=>{const c=COMPANION_LIST.find(x=>x.id===id);if(c)companions.push(...c.people);});
+    let type='solo';
+    if(isTransit) type='vuelo';
+    else if(compIds.size>0&&!(compIds.size===1&&compIds.has('jaci'))) type='amigos';
+    else if(compIds.has('jaci')) type='pareja';
+    const budget=(budgetState&&budgetState.dailyRates)?budgetState.dailyRates[loc.country]||0:0;
+    const firstNote=p.days.map(d=>d.note).find(n=>n)||'';
+    const city=isTransit?(firstNote.split(' — ')[0]||'En tránsito'):loc.label;
+    return {city,country:isTransit?'✈️':(col.flag||''),dates:fmtRange(p.start,p.end),nights,companions,type,budget,note:firstNote};
+  });
+}
+
+function renderTimeline() {
+  const phases = derivePhases();
+  document.getElementById('timelineTrack').innerHTML = phases.map(p => {
+    const avatars = p.companions.map(c => {
+      const person = PEOPLE[c];
+      return `<div class="phase-avatar"><img src="${person?person.avatar:''}" alt="${c}" title="${c}"></div>`;
+    }).join('');
+    return `<div class="phase-card" data-type="${p.type}">
+      <div class="phase-flag">${p.country}</div>
+      <div class="phase-city">${p.city}</div>
+      <div class="phase-dates">${p.dates}</div>
+      <div class="phase-meta">
+        <span class="phase-tag nights">${p.nights?p.nights+' noches':'Tránsito'}</span>
+        ${p.budget?`<span class="phase-tag budget">€${p.budget}/día</span>`:''}
+      </div>
+      <div class="phase-companions">${avatars}</div>
+      <div class="phase-note">${p.note}</div>
+    </div>`;
+  }).join('');
+}
+
+// =============================================
+// FLIGHTS
+// =============================================
+const flights = [
+  {airline:'Iberia',code:'IB0118',reserva:'LWXG2',from:{iata:'SCL',city:'Santiago'},to:{iata:'MAD',city:'Madrid'},departure:'14 mayo · 10:40',arrival:'15 mayo · 05:20',passengers:['Max']},
+  {airline:'Iberia',code:'IB0114',reserva:'8YVTUR',from:{iata:'SCL',city:'Santiago'},to:{iata:'MAD',city:'Madrid'},departure:'15 mayo · 22:20',arrival:'16 mayo · 17:00',passengers:['Jacinta']},
+  {airline:'Ryanair',code:'FR 725',reserva:'JZMHHZ',from:{iata:'MAD',city:'Madrid'},to:{iata:'PMO',city:'Palermo'},departure:'18 mayo · 22:10',arrival:'19 mayo · 00:40',passengers:['Max','Jacinta']},
+  {airline:'Por confirmar',code:'TBD',reserva:'',from:{iata:'LHR',city:'Londres'},to:{iata:'SCL',city:'Santiago'},departure:'7 junio',arrival:'7 junio',passengers:['Jacinta'],note:'Jaci vuelve directo desde Londres'},
+  {airline:'Iberia',code:'IB0113',reserva:'LWXG2',from:{iata:'MAD',city:'Madrid'},to:{iata:'SCL',city:'Santiago'},departure:'21 junio · 13:00',arrival:'21 junio · 20:20',passengers:['Max']},
+];
+
+function renderFlights() {
+  document.getElementById('flightsGrid').innerHTML=flights.map(f=>`
+    <div class="flight-card${!f.reserva?' flight-card--pending':''}">
+      <div class="flight-airline">${f.airline}</div>
+      <div class="flight-route">
+        <div class="flight-city"><div class="flight-iata">${f.from.iata}</div><div class="flight-city-name">${f.from.city}</div></div>
+        <div class="flight-arrow"><div class="flight-number-badge">${f.code}</div><div class="flight-arrow-line"></div></div>
+        <div class="flight-city"><div class="flight-iata">${f.to.iata}</div><div class="flight-city-name">${f.to.city}</div></div>
+      </div>
+      <div class="flight-details">
+        <div><div class="flight-detail-label">Salida</div><div class="flight-detail-value">${f.departure}</div></div>
+        <div><div class="flight-detail-label">Llegada</div><div class="flight-detail-value">${f.arrival}</div></div>
+      </div>
+      <div class="flight-passengers">${f.passengers.map(p=>`<span class="flight-passenger-tag">${p}</span>`).join('')}</div>
+      ${f.note?`<div class="flight-note" style="color:#D4705A;font-size:.85em;margin-top:4px;">${f.note}</div>`:''}
+      <div class="flight-reserva">${f.reserva?'Reserva: '+f.reserva:'Reserva: Por confirmar'}</div>
+    </div>`).join('');
+}
+
+// =============================================
+// BUDGET
+// =============================================
+function computeBudgetTotals() {
+  let dailyTotal=0; const byCountry={};
+  DAYS.forEach(({k})=>{ const d=calData[k]||{loc:"tbd"}; const c=gL(d.loc).country; const r=budgetState.dailyRates[c]||0; dailyTotal+=r; if(r>0)byCountry[c]=(byCountry[c]||0)+r; });
+  const oneTimeTotal=budgetState.oneTimeCosts.reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+  const projected=dailyTotal+oneTimeTotal, balance=budgetState.total-projected, pct=Math.min(100,Math.round(projected/budgetState.total*100));
+  return{projected,oneTimeTotal,dailyTotal,balance,pct,byCountry};
+}
+
+function renderBudget() {
+  const container=document.getElementById('budgetContainer');
+  const bs=computeBudgetTotals(), isOver=bs.balance<0, fmt=n=>Math.round(n).toLocaleString('es-CL');
+  const barColor=isOver?'var(--danger)':bs.pct>85?'var(--warning)':'var(--positive)';
+
+  const donutItems=[...budgetState.oneTimeCosts.map((c,i)=>({name:c.label,amount:parseFloat(c.amount)||0,color:['#D4705A','#5A9E7F','#5B7FA5','#C9A84C','#8B7DB8','#D08B5B','#7BBF9E','#A899D0'][i%8]})),...Object.entries(bs.byCountry).map(([c,amount])=>({name:COUNTRY_LABELS[c]||c,amount,color:gCol(c).fg}))];
+  const radius=88,circ=2*Math.PI*radius;let offset=0;
+  const donut=donutItems.filter(d=>d.amount>0).map(seg=>{const p=seg.amount/bs.projected,dash=p*circ,gap=circ-dash;const h=`<circle cx="120" cy="120" r="${radius}" fill="none" stroke="${seg.color}" stroke-width="20" stroke-dasharray="${dash} ${gap}" stroke-dashoffset="${-offset}" opacity="0.8"/>`;offset+=dash;return h;});
+
+  const dailyItems=[]; const countryDays={};
+  DAYS.forEach(({k})=>{const d=calData[k]||{loc:"tbd"};const c=gL(d.loc).country;if(budgetState.dailyRates[c]>0)countryDays[c]=(countryDays[c]||0)+1;});
+  Object.entries(countryDays).forEach(([c,days])=>{const rate=budgetState.dailyRates[c]||0;dailyItems.push({name:COUNTRY_LABELS[c]||c,days,rate,total:days*rate,color:gCol(c).fg});});
+  const maxBar=Math.max(...dailyItems.map(d=>d.total),1);
+
+  const summaryRows=[{name:'Costos fijos',amount:bs.oneTimeTotal,color:'var(--accent)'},{name:'Costos diarios',amount:bs.dailyTotal,color:'var(--positive)'},{name:'Total proyectado',amount:bs.projected,color:'var(--text-1)'}];
+  const rateLabels={es:"España",it:"Italia",it_road:"Italia (ruta)",uk:"Reino Unido",de:"Alemania",nl:"Países Bajos"};
+
+  const configBody=budgetConfigOpen?`<div class="budget-config-body">
+    <div class="budget-section-label">Total disponible</div>
+    <div class="budget-rate-row" style="margin-bottom:6px"><span style="font-size:0.75rem">Presupuesto</span>
+      <input type="number" class="budget-rate-input" value="${budgetState.total}" min="0" step="100" onchange="budgetState.total=parseFloat(this.value)||0;saveBudget(budgetState);renderBudget()">
+      <span class="budget-rate-unit">EUR</span></div>
+    <div class="budget-section-label">Costo diario por país</div>
+    <div class="budget-rates-grid">${Object.entries(rateLabels).map(([c,label])=>`<div class="budget-rate-row"><div class="budget-rate-dot" style="background:${gCol(c).fg}"></div><span class="budget-rate-label">${label}</span><input type="number" class="budget-rate-input" value="${budgetState.dailyRates[c]||0}" min="0" step="5" onchange="budgetState.dailyRates['${c}']=parseFloat(this.value)||0;saveBudget(budgetState);renderBudget()"><span class="budget-rate-unit">EUR</span></div>`).join('')}</div>
+    <div class="budget-section-label">Costos puntuales</div>
+    <table class="onetime-table"><thead><tr><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody>
+      ${budgetState.oneTimeCosts.map(c=>`<tr><td><input type="text" value="${c.label}" onchange="updateOTC('${c.id}','label',this.value)"></td><td><input type="number" value="${c.amount}" min="0" onchange="updateOTC('${c.id}','amount',this.value)"></td><td><button class="btn-del-row" onclick="deleteOTC('${c.id}')">×</button></td></tr>`).join('')}
+    </tbody></table>
+    <button class="btn-add-row" style="margin-top:6px" onclick="addOTC()">+ Agregar</button>
+  </div>`:'';
+
+  container.innerHTML=`
+    <div class="budget-cards">
+      <div class="budget-card-item"><div class="budget-card-label">Presupuesto</div><div class="budget-card-val">€${fmt(budgetState.total)}</div></div>
+      <div class="budget-card-item${isOver?' over':''}"><div class="budget-card-label">Proyectado</div><div class="budget-card-val">€${fmt(bs.projected)}</div><div class="budget-card-sub">${fmt(bs.dailyTotal)} diario + ${fmt(bs.oneTimeTotal)} fijo</div><div class="budget-card-bar"><div class="budget-card-bar-fill" style="width:${bs.pct}%;background:${barColor}"></div></div></div>
+      <div class="budget-card-item"><div class="budget-card-label">${isOver?'Exceso':'Saldo'}</div><div class="budget-card-val ${isOver?'over':'ok'}">${isOver?'−':'+'}€${fmt(Math.abs(bs.balance))}</div></div>
+    </div>
+    <div class="budget-top">
+      <div class="budget-donut-wrapper"><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="${radius}" fill="none" stroke="var(--bg-3)" stroke-width="20"/>${donut.join('')}</svg><div class="budget-donut-center"><div class="budget-donut-amount">€${fmt(bs.projected)}</div><div class="budget-donut-label">Proyectado</div></div></div>
+      <div>
+        <div class="budget-summary-list">${summaryRows.map((r,i)=>`<div class="budget-summary-row"${i===summaryRows.length-1?' style="font-weight:700"':''}><div class="budget-row-left"><div class="budget-dot" style="background:${r.color}"></div><div class="budget-row-name">${r.name}</div></div><div class="budget-row-amount">€${fmt(r.amount)}</div></div>`).join('')}</div>
+        <div class="budget-bars-section"><div class="budget-bars-title">Gasto diario por destino</div>
+          ${dailyItems.map(d=>`<div class="budget-bar-row"><div class="budget-bar-label">${d.name}</div><div class="budget-bar-track"><div class="budget-bar-fill" style="width:${(d.total/maxBar*100).toFixed(1)}%;background:${d.color};">${d.days}d × €${d.rate}</div></div><div class="budget-bar-amount">€${d.total}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="budget-config"><div class="budget-config-header" onclick="budgetConfigOpen=!budgetConfigOpen;renderBudget()"><span class="budget-config-title">Configurar presupuesto</span><span class="budget-config-toggle">${budgetConfigOpen?'Colapsar':'Expandir'}</span></div>${configBody}</div>
+    <div class="budget-gauge"><div class="budget-gauge-title">Presupuesto total</div><div class="budget-gauge-bar"><div class="budget-gauge-fill" style="width:${bs.pct}%;background:${isOver?'var(--danger)':'linear-gradient(90deg,var(--positive),var(--warning))'}"></div></div><div class="budget-gauge-labels"><span class="budget-gauge-spent">€${fmt(bs.projected)} proyectado</span><span class="budget-gauge-total">de €${fmt(budgetState.total)}</span></div></div>`;
+}
+
+function updateOTC(id,field,value){budgetState.oneTimeCosts=budgetState.oneTimeCosts.map(c=>c.id===id?{...c,[field]:value}:c);saveBudget(budgetState);renderBudget();}
+function deleteOTC(id){budgetState.oneTimeCosts=budgetState.oneTimeCosts.filter(c=>c.id!==id);saveBudget(budgetState);renderBudget();}
+function addOTC(){budgetState.oneTimeCosts.push({id:Date.now().toString(),label:"",amount:0});saveBudget(budgetState);renderBudget();}
+
+// =============================================
+// UNDO / REDO
+// =============================================
+function calUndo() {
+  if (undoStack.length===0) return;
+  redoStack.push(JSON.stringify(calData));
+  calData = JSON.parse(undoStack.pop());
+  selectedDay=null; persist(); renderCalendar(); renderCompanions(); renderTimeline(); renderBudget();
+}
+function calRedo() {
+  if (redoStack.length===0) return;
+  undoStack.push(JSON.stringify(calData));
+  calData = JSON.parse(redoStack.pop());
+  selectedDay=null; persist(); renderCalendar(); renderCompanions(); renderTimeline(); renderBudget();
+}
+
+// =============================================
+// TOOLTIPS
+// =============================================
+let tooltipEl = null, tooltipTimeout = null;
+function initTooltip() {
+  tooltipEl = document.createElement('div');
+  tooltipEl.className = 'cal-tooltip';
+  tooltipEl.id = 'calTooltip';
+  document.body.appendChild(tooltipEl);
+}
+function showTooltip(e) {
+  if (selectedDay) return; // don't show during selection
+  const cell = e.target.closest('.cal-day[data-key]');
+  if (!cell) return;
+  const k = cell.dataset.key;
+  const d = calData[k]||{loc:"tbd",comp:"tbd",note:""};
+  const loc = gL(d.loc);
+  const rate = budgetState.dailyRates[loc.country]||0;
+  tooltipEl.innerHTML = `<div class="cal-tooltip-loc">${loc.label}</div><div class="cal-tooltip-comp">${getCompLabel(d.comp)}</div>${d.note?`<div class="cal-tooltip-note">${d.note}</div>`:''}${rate?`<div class="cal-tooltip-cost">€${rate}/día</div>`:''}`;
+  tooltipEl.classList.add('show');
+  const rect = cell.getBoundingClientRect();
+  let left = rect.left + rect.width/2 - 110;
+  let top = rect.bottom + 6;
+  if (top + 80 > window.innerHeight) top = rect.top - tooltipEl.offsetHeight - 6;
+  if (left < 8) left = 8;
+  if (left + 220 > window.innerWidth) left = window.innerWidth - 228;
+  tooltipEl.style.left = left + 'px';
+  tooltipEl.style.top = top + 'px';
+}
+function hideTooltip() { if (tooltipEl) tooltipEl.classList.remove('show'); }
+
+// =============================================
+// NAV ACTIVE LINK ON SCROLL
+// =============================================
+function initActiveNav() {
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-links a');
+  const navObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const match = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        if (match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin:'-30% 0px -60% 0px' });
+  sections.forEach(s => navObs.observe(s));
+  // Close hamburger on link click
+  links.forEach(l => l.addEventListener('click', () => { document.getElementById('navLinks').classList.remove('open'); }));
+}
+
+// =============================================
+// KEYBOARD NAVIGATION
+// =============================================
+function initKeyboard() {
+  document.addEventListener('keydown', e => {
+    // Undo/Redo
+    if ((e.ctrlKey||e.metaKey) && e.key === 'z' && !e.shiftKey) { e.preventDefault(); calUndo(); return; }
+    if ((e.ctrlKey||e.metaKey) && (e.key === 'Z' || (e.key === 'z' && e.shiftKey))) { e.preventDefault(); calRedo(); return; }
+    // Escape closes edit panel
+    if (e.key === 'Escape' && selectedDay) { selectedDay=null; renderCalendar(); return; }
+    // Arrow keys move selection
+    if (!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter'].includes(e.key)) return;
+    const focused = document.activeElement;
+    if (!focused || !focused.classList.contains('cal-day') || focused.classList.contains('empty')) return;
+    const k = focused.dataset.key;
+    if (!k) return;
+    e.preventDefault();
+    const ak = DAYS.map(d=>d.k), idx = ak.indexOf(k);
+    if (idx < 0) return;
+    let next = idx;
+    if (e.key === 'ArrowRight') next = Math.min(idx+1, ak.length-1);
+    else if (e.key === 'ArrowLeft') next = Math.max(idx-1, 0);
+    else if (e.key === 'ArrowDown') next = Math.min(idx+7, ak.length-1);
+    else if (e.key === 'ArrowUp') next = Math.max(idx-7, 0);
+    else if (e.key === 'Enter') { selectedDay = selectedDay===k?null:k; renderCalendar(); return; }
+    const nextCell = document.querySelector(`.cal-day[data-key="${ak[next]}"]`);
+    if (nextCell) nextCell.focus();
+  });
+}
+
+// =============================================
+// INIT
+// =============================================
+updateCountdown(); setInterval(updateCountdown,60000);
+window.addEventListener('scroll',()=>{document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>60);});
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+renderCompanions(); renderCalendar(); renderTimeline(); renderFlights(); renderBudget();
+setTimeout(()=>{document.querySelectorAll('.reveal:not(.visible)').forEach(el=>observer.observe(el));},100);
+initTooltip(); initActiveNav(); initKeyboard();
+// Tooltip events (delegated)
+document.addEventListener('mouseover', e => { if(e.target.closest('.cal-day[data-key]')) showTooltip(e); });
+document.addEventListener('mouseout', e => { if(e.target.closest('.cal-day[data-key]')) hideTooltip(); });
+
+// T3.3 Drag-to-select
+let dragStart = null, isDragging = false;
+document.addEventListener('mousedown', e => {
+  const cell = e.target.closest('.cal-day[data-key]');
+  if (!cell || e.button !== 0) return;
+  dragStart = cell.dataset.key;
+  isDragging = false;
+});
+document.addEventListener('mousemove', e => {
+  if (!dragStart) return;
+  const cell = e.target.closest('.cal-day[data-key]');
+  if (!cell) return;
+  const k = cell.dataset.key;
+  if (k !== dragStart) isDragging = true;
+  if (isDragging) {
+    // Show range preview
+    selectedDay = dragStart;
+    hoveredDay = k;
+    updateRangeClasses();
+  }
+});
+document.addEventListener('mouseup', e => {
+  if (!dragStart || !isDragging) { dragStart = null; return; }
+  const cell = e.target.closest('.cal-day[data-key]');
+  const endKey = cell ? cell.dataset.key : hoveredDay;
+  if (endKey && endKey !== dragStart && selectedDay) {
+    // Apply like shift+click
+    pushUndo();
+    const sd = calData[dragStart]||{loc:"tbd",comp:"tbd",note:""};
+    const ak = DAYS.map(d=>d.k), a=ak.indexOf(dragStart), b=ak.indexOf(endKey);
+    const [lo,hi] = a<=b?[a,b]:[b,a];
+    for(let i=lo;i<=hi;i++){const key=ak[i];calData[key]={...(calData[key]||{loc:"tbd",comp:"tbd",note:""}),loc:sd.loc,comp:sd.comp};}
+    selectedDay=endKey; hoveredDay=null; persist(); renderCalendar(); renderCompanions(); renderTimeline(); renderBudget();
+  }
+  dragStart = null; isDragging = false;
+});
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+</script>
+</body>
+</html>
